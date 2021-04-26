@@ -19,7 +19,7 @@ java -jar blackjack-bot-1.0-SNAPSHOT.jar <TOKEN> <DATA_FILE_PATH>
 e.g.
 
 ```
-java -jar blackjack-bot-1.0-SNAPSHOT.jar "00000000:AAHkGMEC8MbCdvr6IjJb4kEkP76bU8NOFQ8" $HOME/.cache/slotbot.cache
+java -jar blackjack-bot-1.0-SNAPSHOT.jar "00000000:AAHkGMEC8MbCdvr6IjJb4kEkP76bU8NOFQ8" $HOME/.cache/blackjack.data
 ```
 
 ### Bot Command Sheet
