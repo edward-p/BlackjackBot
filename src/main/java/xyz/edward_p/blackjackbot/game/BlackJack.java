@@ -301,7 +301,7 @@ public class BlackJack implements Game {
                     .append(p.getUsername())
                     .append(": ");
             p.getLeftHand().forEach(c -> sb.append(c.getText()));
-            sb.append("- ").append(p.getSumOfLeft()).append("\n")
+            sb.append("- ").append(p.getSumOfLeft())
                     .append("| ");
             if (p.isLeftHandBust() || (p.getSumOfLeft() < dealerCardSum && dealerCardSum <= 21)) {
                 sb.append("LOSE");
@@ -322,7 +322,7 @@ public class BlackJack implements Game {
                         .append(p.getUsername())
                         .append(": ");
                 p.getRightHand().forEach(c -> sb.append(c.getText()));
-                sb.append("- ").append(p.getSumOfRight()).append("\n")
+                sb.append("- ").append(p.getSumOfRight())
                         .append("| ");
                 if (p.isRightHandBust() || (p.getSumOfRight() < dealerCardSum && dealerCardSum <= 21)) {
                     sb.append("LOSE");
