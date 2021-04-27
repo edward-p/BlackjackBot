@@ -349,7 +349,7 @@ public class BlackJack implements Game {
     }
 
     private synchronized void calcResult(StringBuilder sb) {
-        sb.append("------------------------------\n");
+        sb.append("-----------------------------------\n");
         for (UserData p : players) {
             int win = 0;
 
@@ -361,7 +361,8 @@ public class BlackJack implements Game {
                 win += p.isLeftHandDouble() ? p.getInitBets() * 4 : p.getInitBets() * 2;
             } else if ((!p.isLeftHandBust() && p.getSumOfLeft() == dealerCardSum) ||
                     (p.getLeftHand().size() == 2 && p.getSumOfLeft() == 21 && dealerCardSum == 21)) {
-                win += p.getInitBets();
+                // Left hand draw
+                win += p.isLeftHandDouble() ? p.getInitBets() * 2 : p.getInitBets();
             }
 
             if (p.getRightHand() != null) {
@@ -374,7 +375,8 @@ public class BlackJack implements Game {
                     win += p.isRightHandDouble() ? p.getInitBets() * 4 : p.getInitBets() * 2;
                 } else if ((!p.isRightHandBust() && p.getSumOfRight() == dealerCardSum) ||
                         (p.getRightHand().size() == 2 && p.getSumOfRight() == 21 && dealerCardSum == 21)) {
-                    win += p.getInitBets();
+                    // Right hand draw
+                    win += p.isRightHandDouble() ? p.getInitBets() * 2 : p.getInitBets();
                 }
             }
             p.addBalance(win);
