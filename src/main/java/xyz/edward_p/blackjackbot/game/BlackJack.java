@@ -369,7 +369,7 @@ public class BlackJack implements Game {
                 if (p.getRightHand().size() == 2 && p.getSumOfRight() == 21 && (dealerCards.size() != 2 || dealerCardSum < 21)) {
                     // Left hand black jack
                     win += p.getInitBets() * 2.5;
-                } else if (p.isRightHandBust()
+                } else if (!p.isRightHandBust()
                         && (p.getSumOfRight() > dealerCardSum || dealerCardSum > 21)) {
                     // Right hand Win
                     win += p.isRightHandDouble() ? p.getInitBets() * 4 : p.getInitBets() * 2;
