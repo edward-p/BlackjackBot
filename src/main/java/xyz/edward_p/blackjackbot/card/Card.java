@@ -18,7 +18,7 @@ public class Card implements Cloneable {
     private final Suit suit;
     private final Deck deck;
     private final String text;
-    private int value;
+    private volatile int value;
 
     public Card(Suit suit, Deck deck) {
         this.suit = suit;
@@ -67,7 +67,7 @@ public class Card implements Cloneable {
                 if (c.getValue() == 11) {
                     try {
                         // clone instead of modify the original instance
-                        Card clone = (Card) c.clone();
+                        Card clone = c.clone();
                         clone.setValue(1);
                         cards.set(i, clone);
                     } catch (CloneNotSupportedException e) {
@@ -88,5 +88,10 @@ public class Card implements Cloneable {
     @Override
     public String toString() {
         return text;
+    }
+
+    @Override
+    public Card clone() throws CloneNotSupportedException {
+        return (Card) super.clone();
     }
 }

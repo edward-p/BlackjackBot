@@ -2,7 +2,9 @@ package xyz.edward_p.blackjackbot.card;
 
 import org.junit.jupiter.api.Test;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 
 
 /**
@@ -21,6 +23,30 @@ class CardTest {
             });
             System.out.println();
         });
+    }
+
+    @Test
+    public void cloneTest() throws CloneNotSupportedException {
+        Card card = new Card(Suit.SPADE, Deck.ACE);
+
+        Card clone = card.clone();
+        clone.setValue(1);
+
+        assert card.getValue() == 11;
+        assert clone.getValue() == 1;
+    }
+
+
+    @Test
+    public void sumCardsTest() {
+        List<Card> cardList = new ArrayList<>();
+        Card ace = new Card(Suit.SPADE, Deck.ACE);
+        cardList.add(new Card(Suit.CLUB, Deck.TEN));
+        cardList.add(new Card(Suit.HEART, Deck.KING));
+        cardList.add(ace);
+        cardList.add(ace);
+        assert Card.sumOfCards(cardList) == 22;
+        assert ace.getValue() == 11;
     }
 
 }
