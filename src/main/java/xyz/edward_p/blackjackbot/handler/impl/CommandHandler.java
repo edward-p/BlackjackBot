@@ -1,5 +1,6 @@
 package xyz.edward_p.blackjackbot.handler.impl;
 
+import com.pengrad.telegrambot.model.Chat;
 import com.pengrad.telegrambot.model.Message;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.model.request.InlineKeyboardButton;
@@ -13,9 +14,7 @@ import xyz.edward_p.blackjackbot.game.BlackJack;
 import xyz.edward_p.blackjackbot.game.Game;
 import xyz.edward_p.blackjackbot.handler.UpdateHandler;
 
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collector;
 import java.util.stream.Collectors;
 
 /**
@@ -24,14 +23,18 @@ import java.util.stream.Collectors;
  * Description:
  */
 public class CommandHandler implements UpdateHandler {
+    private static final String BASE_COMMAND_REGEX = "^/.*";
     private static final String COMMAND_REGEX = "^/.*@" + BotContext.name + ".*";
 
     @Override
     public void handle(Update update) {
         Message message = update.message();
-        if (message == null || !message.text().matches(COMMAND_REGEX)) {
+        if (message == null
+                || (message.chat().type() != Chat.Type.Private && !message.text().matches(COMMAND_REGEX))
+                || !message.text().matches(BASE_COMMAND_REGEX)) {
             return;
         }
+
         String text = message.text();
         String[] args = text.replace("@" + BotContext.name, "").split(" ");
 
