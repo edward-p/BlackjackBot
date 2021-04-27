@@ -37,6 +37,8 @@ class BlackJackTest {
         dealerCards.clear();
         dealerCards.add(new Card(Suit.HEART, Deck.JACK));
         dealerCards.add(new Card(Suit.HEART, Deck.ACE));
+        dealerCardSum = Card.sumOfCards(dealerCards);
+
         p.leave();
         p.draw(new Card(Suit.HEART, Deck.JACK));
         p.draw(new Card(Suit.HEART, Deck.ACE));
@@ -47,27 +49,40 @@ class BlackJackTest {
         dealerCards.add(new Card(Suit.HEART, Deck.EIGHT));
         dealerCards.add(new Card(Suit.HEART, Deck.JACK));
         dealerCards.add(new Card(Suit.HEART, Deck.THREE));
+        dealerCardSum = Card.sumOfCards(dealerCards);
+
         p.leave();
         p.draw(new Card(Suit.HEART, Deck.ACE));
         p.draw(new Card(Suit.HEART, Deck.JACK));
 
         assert judge(p).equals("[BLACKJACK]");
+
+
+        dealerCards.clear();
+        dealerCards.add(new Card(Suit.HEART, Deck.FIVE));
+        dealerCards.add(new Card(Suit.HEART, Deck.THREE));
+        dealerCards.add(new Card(Suit.HEART, Deck.NINE));
+        dealerCardSum = Card.sumOfCards(dealerCards);
+
+        p.leave();
+        p.draw(new Card(Suit.HEART, Deck.KING));
+        p.draw(new Card(Suit.HEART, Deck.SEVEN));
+
+        assert judge(p).equals("[DRAW]");
     }
 
     private String judge(UserData p) {
         String str;
         if (p.isLeftHandBust() || (p.getSumOfLeft() < dealerCardSum && dealerCardSum <= 21)) {
             str = "[LOSE]";
-        } else if ((dealerCardSum == p.getSumOfLeft() && dealerCards.size() != 2 && p.getLeftHand().size() != 2) ||
-                (dealerCardSum == 21 && dealerCards.size() == 2 && p.getLeftHand().size() == 2
-                        && p.getSumOfLeft() == 21)) {
-            str = "[DRAW]";
-        } else if (p.getLeftHand().size() == 2 && p.getSumOfLeft() == 21) {
+        } else if (!p.isLeftHandBust() && p.getSumOfLeft() > dealerCardSum && p.getLeftHand().size() != 2) {
+            str = "[WIN]";
+        } else if ((p.getLeftHand().size() == 2 && p.getSumOfLeft() == 21)
+                && !(dealerCardSum == 21 && dealerCards.size() == 2)) {
             str = "[BLACKJACK]";
         } else {
-            str = "[WIN]";
+            str = "[DRAW]";
         }
-
         return str;
     }
 }
