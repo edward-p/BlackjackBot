@@ -304,17 +304,16 @@ public class BlackJack implements Game {
             sb.append("<").append(p.getSumOfLeft()).append("> ");
             if (p.isLeftHandBust() || (p.getSumOfLeft() < dealerCardSum && dealerCardSum <= 21)) {
                 sb.append("[LOSE]");
-            } else if ((dealerCardSum == p.getSumOfLeft() && dealerCards.size() != 2) ||
-                    (dealerCardSum == 21 && dealerCards.size() == 2 && p.getLeftHand().size() == 2
-                            && p.getSumOfLeft() == 21)) {
+            } else if ((dealerCardSum == p.getSumOfLeft() && dealerCards.size() != 2 && p.getLeftHand().size() != 2)
+                    || (dealerCardSum == 21 && dealerCards.size() == 2 && p.getLeftHand().size() == 2
+                    && p.getSumOfLeft() == 21)) {
                 sb.append("[DRAW]");
+            } else if (p.getLeftHand().size() == 2 && p.getSumOfLeft() == 21) {
+                sb.append("[BLACKJACK]");
             } else {
-                if (p.getLeftHand().size() == 2 && p.getSumOfLeft() == 21) {
-                    sb.append("[BLACKJACK]");
-                } else {
-                    sb.append("[WIN]");
-                }
+                sb.append("[WIN]");
             }
+
             sb.append("\n");
             if (p.getRightHand() != null) {
                 sb.append("--")
@@ -324,17 +323,16 @@ public class BlackJack implements Game {
                 sb.append("<").append(p.getSumOfRight()).append("> ");
                 if (p.isRightHandBust() || (p.getSumOfRight() < dealerCardSum && dealerCardSum <= 21)) {
                     sb.append("[LOSE]");
-                } else if ((dealerCardSum == p.getSumOfRight() && dealerCards.size() != 2) ||
-                        (dealerCardSum == 21 && dealerCards.size() == 2 && p.getSumOfRight() == 2
-                                && p.getSumOfRight() == 21)) {
+                } else if ((dealerCardSum == p.getSumOfRight() && dealerCards.size() != 2 && p.getRightHand().size() != 2)
+                        || (dealerCardSum == 21 && dealerCards.size() == 2 && p.getSumOfRight() == 2
+                        && p.getSumOfRight() == 21)) {
                     sb.append("[DRAW]");
+                } else if (p.getRightHand().size() == 2 && p.getSumOfRight() == 21) {
+                    sb.append("[BLACKJACK]");
                 } else {
-                    if (p.getRightHand().size() == 2 && p.getSumOfRight() == 21) {
-                        sb.append("[BLACKJACK]");
-                    } else {
-                        sb.append("[WIN]");
-                    }
+                    sb.append("[WIN]");
                 }
+
                 sb.append("\n");
             }
         }

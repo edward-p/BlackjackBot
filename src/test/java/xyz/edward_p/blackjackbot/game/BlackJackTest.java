@@ -42,23 +42,32 @@ class BlackJackTest {
         p.draw(new Card(Suit.HEART, Deck.ACE));
 
         assert judge(p).equals("[DRAW]");
+
+        dealerCards.clear();
+        dealerCards.add(new Card(Suit.HEART, Deck.EIGHT));
+        dealerCards.add(new Card(Suit.HEART, Deck.JACK));
+        dealerCards.add(new Card(Suit.HEART, Deck.THREE));
+        p.leave();
+        p.draw(new Card(Suit.HEART, Deck.ACE));
+        p.draw(new Card(Suit.HEART, Deck.JACK));
+
+        assert judge(p).equals("[BLACKJACK]");
     }
 
     private String judge(UserData p) {
         String str;
         if (p.isLeftHandBust() || (p.getSumOfLeft() < dealerCardSum && dealerCardSum <= 21)) {
             str = "[LOSE]";
-        } else if ((dealerCardSum == p.getSumOfLeft() && dealerCards.size() != 2) ||
+        } else if ((dealerCardSum == p.getSumOfLeft() && dealerCards.size() != 2 && p.getLeftHand().size() != 2) ||
                 (dealerCardSum == 21 && dealerCards.size() == 2 && p.getLeftHand().size() == 2
                         && p.getSumOfLeft() == 21)) {
             str = "[DRAW]";
+        } else if (p.getLeftHand().size() == 2 && p.getSumOfLeft() == 21) {
+            str = "[BLACKJACK]";
         } else {
-            if (p.getLeftHand().size() == 2 && p.getSumOfLeft() == 21) {
-                str = "[BLACKJACK]";
-            } else {
-                str = "[WIN]";
-            }
+            str = "[WIN]";
         }
+
         return str;
     }
 }
