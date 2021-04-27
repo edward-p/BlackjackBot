@@ -294,26 +294,25 @@ public class BlackJack implements Game {
 
         sb.append("--️Dealer: ");
         dealerCards.forEach(c -> sb.append(c.getText()));
-        sb.append("- ").append(dealerCardSum).append("\n");
+        sb.append("<").append(dealerCardSum).append(">").append("\n");
 
         for (UserData p : players) {
             sb.append("--")
                     .append(p.getUsername())
                     .append(": ");
             p.getLeftHand().forEach(c -> sb.append(c.getText()));
-            sb.append("- ").append(p.getSumOfLeft())
-                    .append("| ");
+            sb.append("<").append(p.getSumOfLeft()).append("> ");
             if (p.isLeftHandBust() || (p.getSumOfLeft() < dealerCardSum && dealerCardSum <= 21)) {
-                sb.append("LOSE");
+                sb.append("[LOSE]");
             } else if ((dealerCardSum == p.getSumOfLeft() && dealerCardSum != 21) ||
                     (dealerCardSum == 21 && dealerCards.size() == 2 && p.getLeftHand().size() == 2
                             && p.getSumOfLeft() == 21)) {
-                sb.append("DRAW");
+                sb.append("[DRAW]");
             } else {
                 if (p.getLeftHand().size() == 2 && p.getSumOfLeft() == 21) {
-                    sb.append("BLACK JACK");
+                    sb.append("[BLACKJACK]");
                 } else {
-                    sb.append("WIN");
+                    sb.append("[WIN]");
                 }
             }
             sb.append("\n");
@@ -322,19 +321,18 @@ public class BlackJack implements Game {
                         .append(p.getUsername())
                         .append(": ");
                 p.getRightHand().forEach(c -> sb.append(c.getText()));
-                sb.append("- ").append(p.getSumOfRight())
-                        .append("| ");
+                sb.append("<").append(p.getSumOfRight()).append("> ");
                 if (p.isRightHandBust() || (p.getSumOfRight() < dealerCardSum && dealerCardSum <= 21)) {
-                    sb.append("LOSE");
+                    sb.append("[LOSE]");
                 } else if ((dealerCardSum == p.getSumOfRight() && dealerCardSum != 21) ||
                         (dealerCardSum == 21 && dealerCards.size() == 2 && p.getSumOfRight() == 2
                                 && p.getSumOfRight() == 21)) {
-                    sb.append("DRAW");
+                    sb.append("[DRAW]");
                 } else {
                     if (p.getRightHand().size() == 2 && p.getSumOfRight() == 21) {
-                        sb.append("BLACK JACK");
+                        sb.append("[BLACKJACK]");
                     } else {
-                        sb.append("WIN");
+                        sb.append("[WIN]");
                     }
                 }
                 sb.append("\n");
@@ -442,8 +440,8 @@ public class BlackJack implements Game {
         StringBuilder sb = new StringBuilder();
         sb.append("```\n");
         sb.append("--️Dealer: ")
-                .append(dealerCards.get(0).getText()).append(Card.CARD_BACK).append("- ")
-                .append(dealerCards.get(0).getValue()).append("\n");
+                .append(dealerCards.get(0).getText()).append(Card.CARD_BACK).append("<")
+                .append(dealerCards.get(0).getValue()).append(">\n");
 
         for (int i = 0; i < players.size(); i++) {
             UserData p = players.get(i);
@@ -451,14 +449,14 @@ public class BlackJack implements Game {
                     .append(p.getUsername())
                     .append(": ");
             p.getLeftHand().forEach(c -> sb.append(c.getText()));
-            sb.append("- ").append(p.getSumOfLeft());
+            sb.append("<").append(p.getSumOfLeft()).append("> ");
             if (p.getCurrentHand() != p.getLeftHand()) {
                 if (p.isLeftHandBust()) {
-                    sb.append("| BUST");
+                    sb.append("[BUST]");
                 } else if (p.getLeftHand().size() == 2 && p.getSumOfLeft() == 21) {
-                    sb.append("| BLACK JACK");
+                    sb.append("[BLACKJACK]");
                 } else {
-                    sb.append("| STAND");
+                    sb.append("[STAND]");
                 }
             }
             sb.append("\n");
@@ -467,14 +465,14 @@ public class BlackJack implements Game {
                         .append(p.getUsername())
                         .append(": ");
                 p.getRightHand().forEach(c -> sb.append(c.getText()));
-                sb.append("- ").append(p.getSumOfRight());
+                sb.append("<").append(p.getSumOfRight()).append("> ");
                 if (p.getCurrentHand() != p.getRightHand()) {
                     if (p.isRightHandBust()) {
-                        sb.append("| BUST");
+                        sb.append("[BUST]");
                     } else if (p.getRightHand().size() == 2 && p.getSumOfRight() == 21) {
-                        sb.append("| BLACK JACK");
+                        sb.append("[BLACKJACK]");
                     } else if (p.getCurrentHand() == null) {
-                        sb.append("| STAND");
+                        sb.append("[STAND]");
                     }
                 }
                 sb.append("\n");
