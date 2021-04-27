@@ -353,7 +353,8 @@ public class BlackJack implements Game {
         for (UserData p : players) {
             int win = 0;
 
-            if (p.getLeftHand().size() == 2 && p.getSumOfLeft() == 21 && (dealerCards.size() != 2 || dealerCardSum < 21)) {
+            if (p.getLeftHand().size() == 2 && p.getSumOfLeft() == 21
+                    && (dealerCards.size() != 2 || dealerCardSum < 21)) {
                 // Left hand black jack
                 win += p.getInitBets() * 2.5;
             } else if (!p.isLeftHandBust() && (p.getSumOfLeft() > dealerCardSum || dealerCardSum > 21)) {
@@ -366,7 +367,8 @@ public class BlackJack implements Game {
             }
 
             if (p.getRightHand() != null) {
-                if (p.getRightHand().size() == 2 && p.getSumOfRight() == 21 && (dealerCards.size() != 2 || dealerCardSum < 21)) {
+                if (p.getRightHand().size() == 2 && p.getSumOfRight() == 21
+                        && (dealerCards.size() != 2 || dealerCardSum < 21)) {
                     // Left hand black jack
                     win += p.getInitBets() * 2.5;
                 } else if (!p.isRightHandBust()
@@ -485,7 +487,8 @@ public class BlackJack implements Game {
 
         UserData currentPlayer = players.get(currentPlayerIndex);
         List<Card> currentHand = currentPlayer.getCurrentHand();
-        if (currentPlayer.getBalance() >= currentPlayer.getInitBets() && currentHand != null && currentHand.size() == 2) {
+        if (currentPlayer.getBalance() >= currentPlayer.getInitBets()
+                && currentHand != null && currentHand.size() == 2) {
             keyboard.addRow(new InlineKeyboardButton("DOUBLE_DOWN").callbackData("DOUBLE_DOWN"));
             if (currentPlayer.getRightHand() == null
                     && currentHand.get(0).getDeck() == currentHand.get(1).getDeck()) {
