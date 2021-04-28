@@ -396,7 +396,6 @@ public class BlackJack implements Game {
             answerCallback(callbackQuery.id(), "Can start only if inactive for 5s!", false);
             return;
         }
-        this.currentPlayerIndex = 0;
 
         if (!started) {
             initGame();
@@ -407,6 +406,8 @@ public class BlackJack implements Game {
         if (started) {
             return;
         }
+
+        this.currentPlayerIndex = 0;
         this.started = true;
 
         dealerCards.add(cards.removeFirst());
