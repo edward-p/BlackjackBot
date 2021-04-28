@@ -73,6 +73,16 @@ class BlackJackTest {
         p.draw(new Card(Suit.HEART, Deck.KING));
         p.draw(new Card(Suit.HEART, Deck.SEVEN));
         Assertions.assertEquals("[WIN]", judge(p));
+
+        dealerCards.clear();
+        dealerCards.add(new Card(Suit.HEART, Deck.TWO));
+        dealerCards.add(new Card(Suit.HEART, Deck.KING));
+        dealerCards.add(new Card(Suit.HEART, Deck.FIVE));
+        dealerCardSum = Card.sumOfCards(dealerCards);
+        p.leave();
+        p.draw(new Card(Suit.HEART, Deck.SEVEN));
+        p.draw(new Card(Suit.HEART, Deck.ACE));
+        Assertions.assertEquals("[WIN]", judge(p));
     }
 
     private String judge(UserData p) {
@@ -80,7 +90,7 @@ class BlackJackTest {
         if (p.isLeftHandBust() || (p.getSumOfLeft() < dealerCardSum && dealerCardSum <= 21)) {
             str = "[LOSE]";
         } else if (!p.isLeftHandBust() && (dealerCardSum > 21 ||
-                (p.getSumOfLeft() > dealerCardSum && p.getLeftHand().size() != 2))) {
+                (p.getSumOfLeft() > dealerCardSum && p.getSumOfLeft() != 21))) {
             str = "[WIN]";
         } else if ((p.getLeftHand().size() == 2 && p.getSumOfLeft() == 21)
                 && !(dealerCardSum == 21 && dealerCards.size() == 2)) {
