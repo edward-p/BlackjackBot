@@ -55,8 +55,10 @@ public class BlackJack implements Game {
     private volatile Integer currentPlayerIndex;
     private volatile long canStartUntil;
     private volatile int dealerCardSum;
+    private volatile boolean started;
 
     public BlackJack(long chatId) {
+        this.started = false;
         this.dealerCards = new ArrayList<>();
         this.cards = new LinkedList<>();
         // Prepare 4 decks of cards
@@ -65,7 +67,7 @@ public class BlackJack implements Game {
         }
         // Shuffle
         Collections.shuffle(cards);
-        this.players = new ArrayList<>(208);
+        this.players = new Vector<>(5);
         // Send game
         SendMessage sendMessage = new SendMessage(chatId, "Okay, bets in:")
                 .replyMarkup(BET_KEYBOARD);
@@ -395,10 +397,18 @@ public class BlackJack implements Game {
             return;
         }
         this.currentPlayerIndex = 0;
-        initGame();
+
+        if (!started) {
+            initGame();
+        }
     }
 
     private synchronized void initGame() {
+        if (started) {
+            return;
+        }
+        this.started = true;
+
         dealerCards.add(cards.removeFirst());
         dealerCards.add(cards.removeFirst());
 
