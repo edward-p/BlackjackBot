@@ -304,7 +304,8 @@ public class BlackJack implements Game {
             sb.append("<").append(p.getSumOfLeft()).append("> ");
             if (p.isLeftHandBust() || (p.getSumOfLeft() < dealerCardSum && dealerCardSum <= 21)) {
                 sb.append("[LOSE]");
-            } else if (!p.isLeftHandBust() && p.getSumOfLeft() > dealerCardSum && p.getLeftHand().size() != 2) {
+            } else if (!p.isLeftHandBust() && (dealerCardSum > 21 ||
+                    (p.getSumOfLeft() > dealerCardSum && p.getLeftHand().size() != 2))) {
                 sb.append("[WIN]");
             } else if ((p.getLeftHand().size() == 2 && p.getSumOfLeft() == 21)
                     && !(dealerCardSum == 21 && dealerCards.size() == 2)) {
@@ -322,7 +323,8 @@ public class BlackJack implements Game {
                 sb.append("<").append(p.getSumOfRight()).append("> ");
                 if (p.isRightHandBust() || (p.getSumOfRight() < dealerCardSum && dealerCardSum <= 21)) {
                     sb.append("[LOSE]");
-                } else if (!p.isRightHandBust() && p.getSumOfRight() > dealerCardSum && p.getRightHand().size() != 2) {
+                } else if (!p.isRightHandBust() && (dealerCardSum > 21 ||
+                        (p.getSumOfRight() > dealerCardSum && p.getRightHand().size() != 2))) {
                     sb.append("[WIN]");
                 } else if ((p.getRightHand().size() == 2 && p.getSumOfRight() == 21)
                         && !(dealerCardSum == 21 && dealerCards.size() == 2)) {
