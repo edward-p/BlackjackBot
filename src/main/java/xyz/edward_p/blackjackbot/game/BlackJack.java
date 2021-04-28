@@ -107,6 +107,10 @@ public class BlackJack implements Game {
     }
 
     private void handleBets(CallbackQuery callbackQuery) {
+        if (started) {
+            return;
+        }
+
         String data = callbackQuery.data();
         Integer userId = callbackQuery.from().id();
         UserContext.holder.computeIfAbsent(userId, UserData::new);
