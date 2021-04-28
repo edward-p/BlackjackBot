@@ -83,18 +83,30 @@ class BlackJackTest {
         p.draw(new Card(Suit.HEART, Deck.SEVEN));
         p.draw(new Card(Suit.HEART, Deck.ACE));
         Assertions.assertEquals("[WIN]", judge(p));
+
+        // Player got 21 after hit
+        dealerCards.clear();
+        dealerCards.add(new Card(Suit.HEART, Deck.SIX));
+        dealerCards.add(new Card(Suit.HEART, Deck.FIVE));
+        dealerCards.add(new Card(Suit.HEART, Deck.NINE));
+        dealerCardSum = Card.sumOfCards(dealerCards);
+        p.leave();
+        p.draw(new Card(Suit.HEART, Deck.FIVE));
+        p.draw(new Card(Suit.HEART, Deck.TEN));
+        p.draw(new Card(Suit.HEART, Deck.SIX));
+        Assertions.assertEquals("[WIN]", judge(p));
     }
 
     private String judge(UserData p) {
         String str;
         if (p.isLeftHandBust() || (p.getSumOfLeft() < dealerCardSum && dealerCardSum <= 21)) {
             str = "[LOSE]";
-        } else if (!p.isLeftHandBust() && (dealerCardSum > 21 ||
-                (p.getSumOfLeft() > dealerCardSum && p.getSumOfLeft() != 21))) {
-            str = "[WIN]";
         } else if ((p.getLeftHand().size() == 2 && p.getSumOfLeft() == 21)
                 && !(dealerCardSum == 21 && dealerCards.size() == 2)) {
             str = "[BLACKJACK]";
+        } else if (!p.isLeftHandBust() && (dealerCardSum > 21 ||
+                (p.getSumOfLeft() > dealerCardSum))) {
+            str = "[WIN]";
         } else {
             str = "[DRAW]";
         }
