@@ -275,6 +275,13 @@ public class BlackJack implements Game {
         }
         currentPlayer.draw(cards.removeFirst());
 
+        if (currentPlayer.getCurrentHand() != null) {
+            // check right Hand
+            if (currentPlayer.getSumOfRight() >= 21) {
+                currentPlayer.stand();
+            }
+        }
+
         seekNextPlayer();
         resultOrUpdate();
     }
