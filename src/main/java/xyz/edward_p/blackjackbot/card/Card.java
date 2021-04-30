@@ -66,7 +66,7 @@ public class Card implements Cloneable {
                 Card c = cards.get(i);
                 if (c.getValue() == 11) {
                     try {
-                        // clone instead of modify the original instance
+                        // clone instead of modifying the original instance
                         Card clone = c.clone();
                         clone.setValue(1);
                         cards.set(i, clone);
