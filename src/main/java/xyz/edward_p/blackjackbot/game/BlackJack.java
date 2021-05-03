@@ -138,9 +138,9 @@ public class BlackJack implements Game {
         }
         if (!players.contains(userData)) {
             players.add(userData);
-            answerCallback(callbackQuery.id(), "Bets: " + userData.getBets());
         }
 
+        answerCallback(callbackQuery.id(), "Bets: " + userData.getBets(), false);
         userData.setUsername(callbackQuery.from().username());
 
         updateBets();
@@ -205,7 +205,7 @@ public class BlackJack implements Game {
             return;
         }
 
-        answerCallback(callbackQuery.id(), "Split!");
+        answerCallback(callbackQuery.id(), "Split!", false);
         currentPlayer.split(cards.removeFirst(), cards.removeFirst());
         seekNextPlayer();
         resultOrUpdate();
@@ -229,7 +229,7 @@ public class BlackJack implements Game {
             return;
         }
 
-        answerCallback(callbackQuery.id(), "Double down!");
+        answerCallback(callbackQuery.id(), "Double down!", false);
         currentPlayer.doubleDown();
         LinkedList<Card> prevHand = currentPlayer.getCurrentHand();
         currentPlayer.draw(cards.removeFirst());
@@ -250,7 +250,7 @@ public class BlackJack implements Game {
                     currentPlayer.getUsername(), false);
             return;
         }
-        answerCallback(callbackQuery.id(), "Stand!");
+        answerCallback(callbackQuery.id(), "Stand!", false);
         currentPlayer.stand();
 
         seekNextPlayer();
@@ -268,7 +268,7 @@ public class BlackJack implements Game {
                     currentPlayer.getUsername(), false);
             return;
         }
-        answerCallback(callbackQuery.id(), "Hit!");
+        answerCallback(callbackQuery.id(), "Hit!", false);
         currentPlayer.draw(cards.removeFirst());
 
         seekNextPlayer();
@@ -401,7 +401,7 @@ public class BlackJack implements Game {
             initGame();
         }
 
-        answerCallback(callbackQuery.id(), "Started!");
+        answerCallback(callbackQuery.id(), "Started!", false);
     }
 
     private synchronized void initGame() {
