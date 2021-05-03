@@ -30,6 +30,7 @@ public class CommandHandler implements UpdateHandler {
     public void handle(Update update) {
         Message message = update.message();
         if (message == null
+                || message.text() == null
                 || (message.chat().type() != Chat.Type.Private && !message.text().matches(COMMAND_REGEX))
                 || !message.text().matches(BASE_COMMAND_REGEX)) {
             return;
