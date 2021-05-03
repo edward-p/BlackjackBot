@@ -138,6 +138,7 @@ public class BlackJack implements Game {
         }
         if (!players.contains(userData)) {
             players.add(userData);
+            answerCallback(callbackQuery.id(), "Bets: " + userData.getBets());
         }
 
         userData.setUsername(callbackQuery.from().username());
@@ -204,6 +205,7 @@ public class BlackJack implements Game {
             return;
         }
 
+        answerCallback(callbackQuery.id(), "Split!");
         currentPlayer.split(cards.removeFirst(), cards.removeFirst());
         seekNextPlayer();
         resultOrUpdate();
@@ -226,6 +228,8 @@ public class BlackJack implements Game {
                     currentPlayer.getUsername(), false);
             return;
         }
+
+        answerCallback(callbackQuery.id(), "Double down!");
         currentPlayer.doubleDown();
         LinkedList<Card> prevHand = currentPlayer.getCurrentHand();
         currentPlayer.draw(cards.removeFirst());
@@ -246,7 +250,7 @@ public class BlackJack implements Game {
                     currentPlayer.getUsername(), false);
             return;
         }
-
+        answerCallback(callbackQuery.id(), "Stand!");
         currentPlayer.stand();
 
         seekNextPlayer();
@@ -264,6 +268,7 @@ public class BlackJack implements Game {
                     currentPlayer.getUsername(), false);
             return;
         }
+        answerCallback(callbackQuery.id(), "Hit!");
         currentPlayer.draw(cards.removeFirst());
 
         seekNextPlayer();
@@ -395,6 +400,8 @@ public class BlackJack implements Game {
         if (!started) {
             initGame();
         }
+
+        answerCallback(callbackQuery.id(), "Started!");
     }
 
     private synchronized void initGame() {
