@@ -108,21 +108,34 @@ public class UserData implements Serializable {
             sumOfLeft = Card.sumOfCards(leftHand);
             if (sumOfLeft >= 21) {
                 currentHand = rightHand;
+                if (this.sumOfRight >= 21) {
+                    // Right hand black jack.
+                    this.currentHand = null;
+                }
             }
         } else if (currentHand == rightHand) {
             this.rightHand.add(card);
             sumOfRight = Card.sumOfCards(rightHand);
-            currentHand = null;
+            if (this.sumOfRight >= 21) {
+                // Right reach 21
+                this.currentHand = null;
+            }
         }
     }
 
     public synchronized void stand() {
         if (currentHand == leftHand) {
-            // switch to right hand
-            this.currentHand = rightHand;
-            return;
+            if (this.sumOfRight >= 21) {
+                // Right hand black jack.
+                this.currentHand = null;
+            } else {
+                // switch to right hand
+                this.currentHand = rightHand;
+            }
+        } else {
+            // Current hand is right hand, and player stand
+            this.currentHand = null;
         }
-        this.currentHand = null;
     }
 
     public synchronized void split(Card cardLeft, Card cardRight) {
@@ -151,6 +164,7 @@ public class UserData implements Serializable {
         if (this.sumOfLeft >= 21) {
             this.currentHand = this.rightHand;
             if (this.sumOfRight >= 21) {
+                // Double black jack after split
                 this.currentHand = null;
             }
         }

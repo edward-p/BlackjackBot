@@ -204,10 +204,8 @@ public class BlackJack implements Game {
             return;
         }
 
-//        currentPlayer.split(cards.removeFirst(), cards.removeFirst());
-        currentPlayer.split(cards.removeFirst(), A_DECK_OF_CARDS.get(11));
-        skipBlackJackPlayers();
-//        seekNextPlayer();
+        currentPlayer.split(cards.removeFirst(), cards.removeFirst());
+        seekNextPlayer();
         resultOrUpdate();
     }
 
@@ -229,13 +227,12 @@ public class BlackJack implements Game {
             return;
         }
         currentPlayer.doubleDown();
+        LinkedList<Card> prevHand = currentPlayer.getCurrentHand();
         currentPlayer.draw(cards.removeFirst());
-        currentPlayer.stand();
-        if (currentPlayer.getCurrentHand() != null) {
-            // check right Hand
-            if (currentPlayer.getSumOfRight() >= 21) {
-                currentPlayer.stand();
-            }
+        LinkedList<Card> currentHand = currentPlayer.getCurrentHand();
+        if (prevHand == currentHand) {
+            // Not bust or 21 after drawing, force stand.
+            currentPlayer.stand();
         }
 
         seekNextPlayer();
@@ -251,12 +248,6 @@ public class BlackJack implements Game {
         }
 
         currentPlayer.stand();
-        if (currentPlayer.getCurrentHand() != null) {
-            // check right Hand
-            if (currentPlayer.getSumOfRight() >= 21) {
-                currentPlayer.stand();
-            }
-        }
 
         seekNextPlayer();
         resultOrUpdate();
@@ -274,13 +265,6 @@ public class BlackJack implements Game {
             return;
         }
         currentPlayer.draw(cards.removeFirst());
-
-        if (currentPlayer.getCurrentHand() != null) {
-            // check right Hand
-            if (currentPlayer.getSumOfRight() >= 21) {
-                currentPlayer.stand();
-            }
-        }
 
         seekNextPlayer();
         resultOrUpdate();
