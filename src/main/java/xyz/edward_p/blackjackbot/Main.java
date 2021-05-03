@@ -14,9 +14,7 @@ import xyz.edward_p.blackjackbot.handler.impl.InlineQueryHandler;
 
 import java.util.Timer;
 import java.util.TimerTask;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
+import java.util.concurrent.*;
 
 /**
  * @author edward <br/>
@@ -59,19 +57,27 @@ public class Main {
         UpdateHandler commandHandler = new CommandHandler();
         UpdateHandler callbackHandler = new CallbackHandler();
         ExecutorService executorService = Executors.newFixedThreadPool(5);
+
+        BlockingQueue<Future<?>> futureBlockingQueue = new LinkedBlockingQueue<>();
         // Register for updates
         bot.setUpdatesListener(updates -> {
             // ... process updates
             // Send messages
-            updates.forEach(update -> executorService.submit(() -> {
-                inlineQueryHandler.handle(update);
-                commandHandler.handle(update);
-                callbackHandler.handle(update);
-            }));
+            updates.forEach(update -> {
+                Future<?> future = executorService.submit(() -> {
+                    inlineQueryHandler.handle(update);
+                    commandHandler.handle(update);
+                    callbackHandler.handle(update);
+                });
+                futureBlockingQueue.offer(future);
+            });
             // return id of last processed update or confirm them all
             return UpdatesListener.CONFIRMED_UPDATES_ALL;
         });
 
+        /*
+         * Clean expired games.
+         */
         new Timer("Game Cleaner", true).schedule(new TimerTask() {
             @Override
             public void run() {
@@ -83,6 +89,28 @@ public class Main {
             }
         }, 60 * 1000L, 60 * 1000L);
 
+        /*
+         * Print exceptions here.
+         */
+        new Timer("Future consumer", true).schedule(
+                new TimerTask() {
+                    @Override
+                    public void run() {
+                        while (futureBlockingQueue.size() != 0) {
+                            Future<?> x = futureBlockingQueue.poll();
+                            try {
+                                x.get();
+                            } catch (InterruptedException | ExecutionException e) {
+                                // Print Exceptions here.
+                                e.printStackTrace();
+                            }
+                        }
+                    }
+                }, 1000L, 1000L);
+
+        /*
+         * Shutdown hook.
+         */
         Runtime.getRuntime().addShutdownHook(new Thread(() -> {
             executorService.shutdown();
             try {
