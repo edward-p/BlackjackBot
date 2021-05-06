@@ -149,7 +149,10 @@ public class BlackJack implements Game {
 
     }
 
-    private void updateBets() {
+    private synchronized void updateBets() {
+        if (started) {
+            return;
+        }
         StringBuilder sb = new StringBuilder();
         sb.append(gameMessage.text()).append("\n");
         players.forEach(e -> sb.append(e.getUsername()).append(": ")
