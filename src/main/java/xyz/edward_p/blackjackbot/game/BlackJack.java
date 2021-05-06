@@ -106,8 +106,9 @@ public class BlackJack implements Game {
                 "Current Balance: " + userData.getBalance());
     }
 
-    private void handleBets(CallbackQuery callbackQuery) {
+    private synchronized void handleBets(CallbackQuery callbackQuery) {
         if (started) {
+            answerCallback(callbackQuery.id(), "Game already started!", false);
             return;
         }
 
@@ -198,6 +199,8 @@ public class BlackJack implements Game {
     }
 
     private void handleSplit(CallbackQuery callbackQuery) {
+        // Not going to change the game status, so synchronized is not needed.
+
         UserData currentPlayer = players.get(currentPlayerIndex);
         if (isNotCurrentPlayer(callbackQuery)) {
             answerCallback(callbackQuery.id(), "Current player is: " +
@@ -387,7 +390,7 @@ public class BlackJack implements Game {
         }
     }
 
-    private void handleStart(CallbackQuery callbackQuery) {
+    private synchronized void handleStart(CallbackQuery callbackQuery) {
         if (players.size() == 0) {
             answerCallback(callbackQuery.id(), "No enough players!", false);
             return;
