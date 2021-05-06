@@ -432,6 +432,9 @@ public class BlackJack implements Game {
             for (; currentPlayerIndex < players.size(); currentPlayerIndex++) {
                 players.get(currentPlayerIndex).stand();
             }
+        } else if (dealerCards.get(0).getValue() == 1) {
+            // Make |A| |A| unguessable
+            dealerCards.get(0).setValue(11);
         }
 
         resultOrUpdate();
