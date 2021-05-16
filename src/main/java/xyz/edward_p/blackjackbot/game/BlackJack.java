@@ -41,7 +41,7 @@ public class BlackJack implements Game {
         ).addRow(
                 new InlineKeyboardButton("50000").callbackData("BET_50000"),
                 new InlineKeyboardButton("100000").callbackData("BET_100000"),
-                new InlineKeyboardButton("ALL_IN").callbackData("BET_ALL")
+                new InlineKeyboardButton("Q/H/A").callbackData("BET_Q_H_A")
         ).addRow(
                 new InlineKeyboardButton("CHECK_IN").callbackData("CHECK_IN"),
                 new InlineKeyboardButton("START").callbackData("START"));
@@ -127,7 +127,7 @@ public class BlackJack implements Game {
             userData.setChatId(chatId);
         }
         long bets;
-        if (data.equals("BET_ALL")) {
+        if (data.equals("BET_Q_H_A")) {
             bets = userData.bet();
         } else {
             long bet = Long.parseLong(data.replace("BET_", ""));

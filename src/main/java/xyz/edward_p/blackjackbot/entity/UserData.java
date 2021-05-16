@@ -26,6 +26,13 @@ public class UserData implements Serializable {
     private transient volatile long chatId;
     private transient volatile long cdUntil;
     private transient volatile long bets;
+    /**
+     * 1 : quarter in
+     * 2 : half in
+     * 3 : all in
+     * 0 : none of the above
+     */
+    private transient volatile int betQHA;
     private transient volatile long initBets;
 
     private transient volatile LinkedList<Card> leftHand;
@@ -56,7 +63,27 @@ public class UserData implements Serializable {
         if (balance == 0) {
             return -1L;
         }
-        return this.bet(this.balance);
+        switch (betQHA) {
+            case 0:
+                bets = balance / 4;
+                balance -= bets;
+                betQHA = 1;
+                break;
+            case 1:
+                balance += bets;
+                bets = balance / 2;
+                balance -= bets;
+                betQHA = 2;
+                break;
+            case 2:
+                balance += bets;
+                bets = balance;
+                balance -= bets;
+                betQHA = 3;
+                break;
+        }
+        this.initBets = this.bets;
+        return this.bets;
     }
 
     public synchronized long bet(long bets) {
@@ -88,6 +115,7 @@ public class UserData implements Serializable {
         }
         this.inGame = false;
         this.bets = 0;
+        this.betQHA = 0;
         this.initBets = 0;
         this.leftHand = null;
         this.sumOfLeft = 0;
