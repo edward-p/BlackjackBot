@@ -34,17 +34,17 @@ public class BlackJack implements Game {
         Arrays.stream(Suit.values()).forEach(x ->
                 Arrays.stream(Deck.values())
                         .forEach(y -> A_DECK_OF_CARDS.add(new Card(x, y))));
-        BET_KEYBOARD = new InlineKeyboardMarkup(
-                new InlineKeyboardButton("1000").callbackData("BET_1000"),
-                new InlineKeyboardButton("5000").callbackData("BET_5000"),
-                new InlineKeyboardButton("10000").callbackData("BET_10000")
-        ).addRow(
-                new InlineKeyboardButton("50000").callbackData("BET_50000"),
-                new InlineKeyboardButton("100000").callbackData("BET_100000"),
-                new InlineKeyboardButton("Q/H/A").callbackData("BET_Q_H_A")
-        ).addRow(
-                new InlineKeyboardButton("CHECK_IN").callbackData("CHECK_IN"),
-                new InlineKeyboardButton("START").callbackData("START"));
+        BET_KEYBOARD = new InlineKeyboardMarkup(new InlineKeyboardButton("ZERO").callbackData("BET_0"))
+                .addRow(new InlineKeyboardButton("1000").callbackData("BET_1000"),
+                        new InlineKeyboardButton("5000").callbackData("BET_5000"),
+                        new InlineKeyboardButton("10000").callbackData("BET_10000"))
+                .addRow(
+                        new InlineKeyboardButton("50000").callbackData("BET_50000"),
+                        new InlineKeyboardButton("100000").callbackData("BET_100000"),
+                        new InlineKeyboardButton("Q/H/A").callbackData("BET_Q_H_A")
+                ).addRow(
+                        new InlineKeyboardButton("CHECK_IN").callbackData("CHECK_IN"),
+                        new InlineKeyboardButton("START").callbackData("START"));
     }
 
     private volatile long expireTime;
