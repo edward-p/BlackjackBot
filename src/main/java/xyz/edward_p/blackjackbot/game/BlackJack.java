@@ -16,7 +16,7 @@ import xyz.edward_p.blackjackbot.card.Suit;
 import xyz.edward_p.blackjackbot.context.BotContext;
 import xyz.edward_p.blackjackbot.context.GameContext;
 import xyz.edward_p.blackjackbot.context.UserContext;
-import xyz.edward_p.blackjackbot.entity.UserData;
+import xyz.edward_p.blackjackbot.entity.UserDataV2;
 
 import java.util.*;
 
@@ -51,7 +51,7 @@ public class BlackJack implements Game {
     private final Message gameMessage;
     private final LinkedList<Card> cards;
     private final List<Card> dealerCards;
-    private final List<UserData> players;
+    private final List<UserDataV2> players;
     private volatile Integer currentPlayerIndex;
     private volatile long canStartUntil;
     private volatile int dealerCardSum;
@@ -90,8 +90,8 @@ public class BlackJack implements Game {
 
     private void handleCheckIn(CallbackQuery callbackQuery) {
         User from = callbackQuery.from();
-        UserContext.holder.computeIfAbsent(from.id(), UserData::new);
-        UserData userData = UserContext.holder.get(from.id());
+        UserContext.holder.computeIfAbsent(from.id(), UserDataV2::new);
+        UserDataV2 userData = UserContext.holder.get(from.id());
         assert userData != null;
 
         long checkTime = userData.getCdUntil() - System.currentTimeMillis();
@@ -113,9 +113,9 @@ public class BlackJack implements Game {
         }
 
         String data = callbackQuery.data();
-        Integer userId = callbackQuery.from().id();
-        UserContext.holder.computeIfAbsent(userId, UserData::new);
-        UserData userData = UserContext.holder.get(userId);
+        Long userId = callbackQuery.from().id();
+        UserContext.holder.computeIfAbsent(userId, UserDataV2::new);
+        UserDataV2 userData = UserContext.holder.get(userId);
         assert userData != null;
 
         long chatId = gameMessage.chat().id();
@@ -169,7 +169,7 @@ public class BlackJack implements Game {
 
     @Override
     public void shutdown() {
-        this.players.forEach(UserData::leave);
+        this.players.forEach(UserDataV2::leave);
         GameContext.remove(gameMessage.chat().id());
     }
 
@@ -204,7 +204,7 @@ public class BlackJack implements Game {
     private void handleSplit(CallbackQuery callbackQuery) {
         // Not going to change the game status, so synchronized is not needed.
 
-        UserData currentPlayer = players.get(currentPlayerIndex);
+        UserDataV2 currentPlayer = players.get(currentPlayerIndex);
         if (isNotCurrentPlayer(callbackQuery)) {
             answerCallback(callbackQuery.id(), "Current player is: " +
                     currentPlayer.getUsername(), false);
@@ -228,7 +228,7 @@ public class BlackJack implements Game {
     }
 
     private synchronized void handleDoubleDown(CallbackQuery callbackQuery) {
-        UserData currentPlayer = players.get(currentPlayerIndex);
+        UserDataV2 currentPlayer = players.get(currentPlayerIndex);
         if (isNotCurrentPlayer(callbackQuery)) {
             answerCallback(callbackQuery.id(), "Current player is: " +
                     currentPlayer.getUsername(), false);
@@ -250,7 +250,7 @@ public class BlackJack implements Game {
     }
 
     private synchronized void handleStand(CallbackQuery callbackQuery) {
-        UserData currentPlayer = players.get(currentPlayerIndex);
+        UserDataV2 currentPlayer = players.get(currentPlayerIndex);
         if (isNotCurrentPlayer(callbackQuery)) {
             answerCallback(callbackQuery.id(), "Current player is: " +
                     currentPlayer.getUsername(), false);
@@ -268,7 +268,7 @@ public class BlackJack implements Game {
     }
 
     private synchronized void handleHit(CallbackQuery callbackQuery) {
-        UserData currentPlayer = players.get(currentPlayerIndex);
+        UserDataV2 currentPlayer = players.get(currentPlayerIndex);
         if (isNotCurrentPlayer(callbackQuery)) {
             answerCallback(callbackQuery.id(), "Current player is: " +
                     currentPlayer.getUsername(), false);
@@ -304,7 +304,7 @@ public class BlackJack implements Game {
         dealerCards.forEach(c -> sb.append(c.getText()));
         sb.append("<").append(dealerCardSum).append(">").append("\n");
 
-        for (UserData p : players) {
+        for (UserDataV2 p : players) {
             sb.append("--")
                     .append(p.getUsername())
                     .append(": ");
@@ -354,7 +354,7 @@ public class BlackJack implements Game {
 
     private synchronized void calcResult(StringBuilder sb) {
         sb.append("-----------------------------------\n");
-        for (UserData p : players) {
+        for (UserDataV2 p : players) {
             int win = 0;
 
             if (p.getLeftHand().size() == 2 && p.getSumOfLeft() == 21
@@ -421,7 +421,7 @@ public class BlackJack implements Game {
         dealerCards.add(cards.removeFirst());
         dealerCards.add(cards.removeFirst());
 
-        for (UserData p : players) {
+        for (UserDataV2 p : players) {
             p.draw(cards.removeFirst());
             p.draw(cards.removeFirst());
         }
@@ -444,7 +444,7 @@ public class BlackJack implements Game {
     }
 
     private synchronized void skipBlackJackPlayers() {
-        for (UserData player : players) {
+        for (UserDataV2 player : players) {
             if (player.getCurrentHand() == null) {
                 // Blackjack!
                 currentPlayerIndex++;
@@ -464,7 +464,7 @@ public class BlackJack implements Game {
                 .append(dealerCards.get(0).getValue()).append(">\n");
 
         for (int i = 0; i < players.size(); i++) {
-            UserData p = players.get(i);
+            UserDataV2 p = players.get(i);
             sb.append(i == currentPlayerIndex && p.getCurrentHand() == p.getLeftHand() ? "->" : "--")
                     .append(p.getUsername())
                     .append(": ");
@@ -503,7 +503,7 @@ public class BlackJack implements Game {
                 new InlineKeyboardButton("HIT").callbackData("HIT"),
                 new InlineKeyboardButton("STAND").callbackData("STAND"));
 
-        UserData currentPlayer = players.get(currentPlayerIndex);
+        UserDataV2 currentPlayer = players.get(currentPlayerIndex);
         List<Card> currentHand = currentPlayer.getCurrentHand();
         if (currentPlayer.getBalance() >= currentPlayer.getInitBets()
                 && currentHand != null && currentHand.size() == 2) {

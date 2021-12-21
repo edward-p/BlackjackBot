@@ -6,7 +6,7 @@ import com.pengrad.telegrambot.model.request.InlineQueryResultArticle;
 import com.pengrad.telegrambot.request.AnswerInlineQuery;
 import xyz.edward_p.blackjackbot.context.BotContext;
 import xyz.edward_p.blackjackbot.context.UserContext;
-import xyz.edward_p.blackjackbot.entity.UserData;
+import xyz.edward_p.blackjackbot.entity.UserDataV2;
 import xyz.edward_p.blackjackbot.handler.UpdateHandler;
 
 /**
@@ -22,9 +22,9 @@ public class InlineQueryHandler implements UpdateHandler {
             return;
         }
 
-        Integer userId = inlineQuery.from().id();
-        UserContext.holder.computeIfAbsent(userId, UserData::new);
-        UserData userData = UserContext.holder.get(userId);
+        Long userId = inlineQuery.from().id();
+        UserContext.holder.computeIfAbsent(userId, UserDataV2::new);
+        UserDataV2 userData = UserContext.holder.get(userId);
         assert userData != null;
 
         BotContext.bot.execute(new AnswerInlineQuery(inlineQuery.id(),

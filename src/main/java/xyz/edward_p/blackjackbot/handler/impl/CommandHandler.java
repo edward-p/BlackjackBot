@@ -9,7 +9,7 @@ import com.pengrad.telegrambot.request.SendMessage;
 import xyz.edward_p.blackjackbot.context.BotContext;
 import xyz.edward_p.blackjackbot.context.GameContext;
 import xyz.edward_p.blackjackbot.context.UserContext;
-import xyz.edward_p.blackjackbot.entity.UserData;
+import xyz.edward_p.blackjackbot.entity.UserDataV2;
 import xyz.edward_p.blackjackbot.game.BlackJack;
 import xyz.edward_p.blackjackbot.game.Game;
 import xyz.edward_p.blackjackbot.handler.UpdateHandler;
@@ -29,10 +29,7 @@ public class CommandHandler implements UpdateHandler {
     @Override
     public void handle(Update update) {
         Message message = update.message();
-        if (message == null
-                || message.text() == null
-                || (message.chat().type() != Chat.Type.Private && !message.text().matches(COMMAND_REGEX))
-                || !message.text().matches(BASE_COMMAND_REGEX)) {
+        if (message == null || message.text() == null || (message.chat().type() != Chat.Type.Private && !message.text().matches(COMMAND_REGEX)) || !message.text().matches(BASE_COMMAND_REGEX)) {
             return;
         }
 
@@ -57,14 +54,11 @@ public class CommandHandler implements UpdateHandler {
     }
 
     private void handleRank(Message message) {
-        List<UserData> collect = UserContext.holder.values().stream()
-                .sorted((o1, o2) -> (int) (o2.getBalance() - o1.getBalance()))
-                .collect(Collectors.toList());
+        List<UserDataV2> collect = UserContext.holder.values().stream().sorted((o1, o2) -> (int) (o2.getBalance() - o1.getBalance())).collect(Collectors.toList());
         StringBuilder sb = new StringBuilder("Rank:\n");
         for (int i = 1; i <= 10 && i - 1 < collect.size(); i++) {
-            UserData userData = collect.get(i - 1);
-            sb.append(i).append(". ").append(userData.getUsername())
-                    .append(" - ").append(userData.getBalance()).append("\n");
+            UserDataV2 userData = collect.get(i - 1);
+            sb.append(i).append(". ").append(userData.getUsername()).append(" - ").append(userData.getBalance()).append("\n");
         }
         answerMessage(message, sb.toString());
     }
@@ -77,11 +71,7 @@ public class CommandHandler implements UpdateHandler {
             String url = "https://t.me";
             String channelId = gameMessage.chat().id().toString().replace("-100", "");
             url += "/c/" + channelId + "/" + gameMessage.messageId();
-            BotContext.bot.execute(new SendMessage(chatId, "A running game is not finished yet!")
-                    .replyToMessageId(message.messageId())
-                    .replyMarkup(new InlineKeyboardMarkup(
-                            new InlineKeyboardButton("To the game").url(url)
-                    )));
+            BotContext.bot.execute(new SendMessage(chatId, "A running game is not finished yet!").replyToMessageId(message.messageId()).replyMarkup(new InlineKeyboardMarkup(new InlineKeyboardButton("To the game").url(url))));
             return;
         }
         GameContext.put(chatId, new BlackJack(chatId));
@@ -97,15 +87,15 @@ public class CommandHandler implements UpdateHandler {
             answerMessage(message, "Reply to the message to transfer!");
             return;
         }
-        Integer fromId = message.from().id();
-        Integer toId = message.replyToMessage().from().id();
+        Long fromId = message.from().id();
+        Long toId = message.replyToMessage().from().id();
         assert fromId != null;
         assert toId != null;
-        UserContext.holder.computeIfAbsent(fromId, UserData::new);
-        UserContext.holder.computeIfAbsent(toId, UserData::new);
+        UserContext.holder.computeIfAbsent(fromId, UserDataV2::new);
+        UserContext.holder.computeIfAbsent(toId, UserDataV2::new);
 
-        UserData fromUser = UserContext.holder.get(fromId);
-        UserData toUser = UserContext.holder.get(toId);
+        UserDataV2 fromUser = UserContext.holder.get(fromId);
+        UserDataV2 toUser = UserContext.holder.get(toId);
 
         long transfer = fromUser.transfer(toUser, amount);
         if (transfer == -1L) {
